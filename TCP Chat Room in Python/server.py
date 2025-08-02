@@ -8,11 +8,11 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((host, port))
 server.listen()
 
-clinets = []
+clients = []
 nicknames = []
 
 def broadcast(message):
-	for client in clinets:
+	for client in clients:
 		client.send(message)
 
 def handle(client):
@@ -20,9 +20,9 @@ def handle(client):
 		try:
 			message = client.recv(1024)
 			broadcast(message)
-		except:
-			index = clinets.index(client)
-			clinets.remove(client)
+		except ConnectionResetError:
+			index = clients.index(client)
+			clients.remove(client)
 			client.close()
 			nickname = nicknames[index]
 			broadcast(f'{nickname} has left the chat!'.encode('ascii'))
@@ -37,7 +37,7 @@ def receive():
 		client.send('NICK'.encode('ascii'))
 		nickname = client.recv(1024).decode('ascii')
 		nicknames.append(nickname)
-		clinets.append(client)
+		clients.append(client)
 
 		print(f"Nickname of the clinet is {nickname}!")
 		broadcast(f"{nickname} joined the chat!".encode('ascii'))

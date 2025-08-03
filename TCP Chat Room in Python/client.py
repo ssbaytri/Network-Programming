@@ -10,6 +10,7 @@ port = 5050
 
 client.connect((host, port))
 
+
 def receive():
 	while True:
 		try:
@@ -27,6 +28,7 @@ def receive():
 			print(f"Unexpected error: {e}")
 			client.close()
 			break
+
 
 def write():
 	while True:

@@ -1,7 +1,7 @@
 import threading
 import socket
 
-host = "127.0.0.1" # local host
+host = "127.0.0.1"  # local host
 port = 5050
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -11,9 +11,11 @@ server.listen()
 clients = []
 nicknames = []
 
+
 def broadcast(message):
 	for client in clients:
 		client.send(message)
+
 
 def handle(client):
 	while True:
@@ -29,6 +31,7 @@ def handle(client):
 			nicknames.remove(nickname)
 			break
 
+
 def receive():
 	while True:
 		client, address = server.accept()
@@ -39,12 +42,13 @@ def receive():
 		nicknames.append(nickname)
 		clients.append(client)
 
-		print(f"Nickname of the clinet is {nickname}!")
+		print(f"Nickname of the client is {nickname}!")
 		broadcast(f"{nickname} joined the chat!".encode('ascii'))
 		client.send("Connected to the server!".encode('ascii'))
 
 		thread = threading.Thread(target=handle, args=(client,))
 		thread.start()
+
 
 print("Server is listening...")
 receive()

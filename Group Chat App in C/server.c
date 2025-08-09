@@ -16,9 +16,27 @@ int main()
 	int clientSockFD = accept(serverSocketFD, (struct sockaddr *)&clientAddr, &clientAddrSize);
 
 	char buffer[1024];
-	recv(clientSockFD, buffer, 1024, 0);
 
-	printf("Response was : %s\n", buffer);
+	while (true)
+	{
+		ssize_t bytesReceived = recv(clientSockFD, buffer, sizeof(buffer) - 1, 0);
+
+		if (bytesReceived > 0)
+		{
+			buffer[bytesReceived] = '\0';
+			printf("Response was: %s", buffer);
+		}
+		else if (bytesReceived == 0)
+		{
+			printf("Client disconnected\n");
+			break;
+		}
+		else
+		{
+			perror("recv");
+			break;
+		}
+	}
 
 	free(serverAddr);
 	close(serverSocketFD);

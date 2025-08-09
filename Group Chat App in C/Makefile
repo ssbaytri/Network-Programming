@@ -2,8 +2,8 @@ CC = cc
 CFLAGS = -Wall -Wextra
 
 # Targets
-CLIENT = chat_client
-SERVER = chat_server
+CLIENT = client
+SERVER = server
 
 # Source files
 CLIENT_SRC = client.c utils.c

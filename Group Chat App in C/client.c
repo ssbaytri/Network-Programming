@@ -20,10 +20,26 @@ int main(void) {
     return 1;
   }
 
-  char request[] = "hello world for testing\n";
-  send(sockFD, request, strlen(request), 0);
+
+  char *line = NULL;
+  size_t lineSize = 0;
+  printf("type something here (type exit)...\n");
+
+  while (true)
+  {
+    ssize_t charCount = getline(&line, &lineSize, stdin);
+    
+    if (charCount > 0)
+    {
+      if (strcmp(line, "exit\n") == 0)
+        break;
+      else
+        send(sockFD, line, strlen(line), 0);
+    }
+  }
 
   free(address);
   close(sockFD);
+  free(line);
   return 0;
 }

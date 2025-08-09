@@ -11,7 +11,16 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+typedef struct AcceptedSock
+{
+    int acceptedSocketFD;
+    struct sockaddr_in address;
+    int error;
+    bool accepted;
+} AcceptedSock;
+
 int createTCPSocket();
 struct sockaddr_in *createAddress(const char *ip, const int port);
+AcceptedSock *acceptIncomingConn(int serverSocketFD);
 
 #endif

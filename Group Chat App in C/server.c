@@ -11,15 +11,13 @@ int main()
 
 	listen(serverSocketFD, 10);
 
-	struct sockaddr_in clientAddr;
-	socklen_t clientAddrSize = sizeof(struct sockaddr_in);
-	int clientSockFD = accept(serverSocketFD, (struct sockaddr *)&clientAddr, &clientAddrSize);
+	AcceptedSock* clientSock = acceptIncomingConn(serverSocketFD);
 
 	char buffer[1024];
 
 	while (true)
 	{
-		ssize_t bytesReceived = recv(clientSockFD, buffer, sizeof(buffer) - 1, 0);
+		ssize_t bytesReceived = recv(clientSock->acceptedSocketFD, buffer, sizeof(buffer) - 1, 0);
 
 		if (bytesReceived > 0)
 		{
@@ -38,9 +36,10 @@ int main()
 		}
 	}
 
-	free(serverAddr);
 	close(serverSocketFD);
-	close(clientSockFD);
+	close(clientSock->acceptedSocketFD);
+	free(serverAddr);
+	free(clientSock);
 
 	return 0;
 }

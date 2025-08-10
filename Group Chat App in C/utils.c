@@ -34,3 +34,29 @@ AcceptedSock *acceptIncomingConn(int serverSocketFD)
 
 	return acceptedSock;
 }
+
+void recvAndLog(int sockFD)
+{
+	char buffer[1024];
+
+	while (true)
+	{
+		ssize_t bytesReceived = recv(sockFD, buffer, sizeof(buffer) - 1, 0);
+
+		if (bytesReceived > 0)
+		{
+			buffer[bytesReceived] = '\0';
+			printf("Response was: %s", buffer);
+		}
+		else if (bytesReceived == 0)
+		{
+			printf("Client disconnected\n");
+			break;
+		}
+		else
+		{
+			perror("recv");
+			break;
+		}
+	}
+}

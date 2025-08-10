@@ -22,5 +22,6 @@ typedef struct AcceptedSock
 int createTCPSocket();
 struct sockaddr_in *createAddress(const char *ip, const int port);
 AcceptedSock *acceptIncomingConn(int serverSocketFD);
+void recvAndLog(int sockFD);
 
 #endif

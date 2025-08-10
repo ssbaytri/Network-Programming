@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <pthread.h>
 
 typedef struct AcceptedSock
 {
@@ -22,6 +23,7 @@ typedef struct AcceptedSock
 int createTCPSocket();
 struct sockaddr_in *createAddress(const char *ip, const int port);
 AcceptedSock *acceptIncomingConn(int serverSocketFD);
-void recvAndLog(int sockFD);
+void *recvAndLog(void *sockFD);
+void startAcceptConn(int serverSocketFD);
 
 #endif

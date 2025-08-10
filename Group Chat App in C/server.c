@@ -11,14 +11,10 @@ int main()
 
 	listen(serverSocketFD, 10);
 
-	AcceptedSock* clientSock = acceptIncomingConn(serverSocketFD);
-
-	recvAndLog(clientSock->acceptedSocketFD);
+	startAcceptConn(serverSocketFD);
 
 	close(serverSocketFD);
-	close(clientSock->acceptedSocketFD);
 	free(serverAddr);
-	free(clientSock);
 
 	return 0;
 }

@@ -35,9 +35,10 @@ AcceptedSock *acceptIncomingConn(int serverSocketFD)
 	return acceptedSock;
 }
 
-void recvAndLog(int sockFD)
+void *recvAndLog(void *arg)
 {
 	char buffer[1024];
+	int sockFD = *(int *)arg;
 
 	while (true)
 	{
@@ -59,4 +60,26 @@ void recvAndLog(int sockFD)
 			break;
 		}
 	}
+	free(arg);
+	close(sockFD);
+	return NULL;
+}
+
+void recvAndLogOnThread(AcceptedSock *pSOcket)
+{
+	pthread_t id;
+	int *fdCopy = malloc(sizeof(int));
+	*fdCopy = pSOcket->acceptedSocketFD;
+	pthread_create(&id, NULL, recvAndLog, fdCopy);
+	pthread_detach(id);
+	free(pSOcket);
+}
+
+void startAcceptConn(int serverSockFD)
+{
+    while (true)
+    {
+        AcceptedSock *clientSock = acceptIncomingConn(serverSockFD);
+        recvAndLogOnThread(clientSock);
+    }
 }

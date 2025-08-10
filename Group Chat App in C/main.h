@@ -25,5 +25,7 @@ struct sockaddr_in *createAddress(const char *ip, const int port);
 AcceptedSock *acceptIncomingConn(int serverSocketFD);
 void *recvAndLog(void *sockFD);
 void startAcceptConn(int serverSocketFD);
+void broadcastMsg(char *msg, int sockFD);
+void *clientIncomMsgs(void *sockFD);
 
 #endif

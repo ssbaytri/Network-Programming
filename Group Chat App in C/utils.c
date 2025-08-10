@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 int createTCPSocket()
 {
@@ -35,6 +36,18 @@ AcceptedSock *acceptIncomingConn(int serverSocketFD)
 	return acceptedSock;
 }
 
+AcceptedSock accptedConnections[10];
+int acceptedConnCount = 0;
+
+void broadcastMsg(char *msg, int sockFD)
+{
+	for (int i = 0; i < acceptedConnCount; i++)
+	{
+		if (accptedConnections[i].acceptedSocketFD != sockFD)
+			send(accptedConnections[i].acceptedSocketFD, msg, strlen(msg), 0);
+	}
+}
+
 void *recvAndLog(void *arg)
 {
 	char buffer[1024];
@@ -48,6 +61,7 @@ void *recvAndLog(void *arg)
 		{
 			buffer[bytesReceived] = '\0';
 			printf("Response was: %s", buffer);
+			broadcastMsg(buffer, sockFD);
 		}
 		else if (bytesReceived == 0)
 		{
@@ -80,6 +94,35 @@ void startAcceptConn(int serverSockFD)
     while (true)
     {
         AcceptedSock *clientSock = acceptIncomingConn(serverSockFD);
+		accptedConnections[acceptedConnCount++] = *clientSock;
         recvAndLogOnThread(clientSock);
     }
+}
+
+void *clientIncomMsgs(void *arg)
+{
+	char buffer[1024];
+	int sockFD = *(int *)arg;
+
+	while (true)
+	{
+		ssize_t bytesReceived = recv(sockFD, buffer, 1024, 0);
+
+		if (bytesReceived > 0)
+		{
+			buffer[bytesReceived] = 0;
+			printf("Response was: %s", buffer);
+		}
+		else if (bytesReceived == 0)
+		{
+			printf("Client disconnected\n");
+			break;
+		}
+		else
+		{
+			perror("recv");
+			break;
+		}
+	}
+	return NULL;
 }

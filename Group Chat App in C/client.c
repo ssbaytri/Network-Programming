@@ -1,6 +1,7 @@
 #include "main.h"
 
-int main(void) {
+int main(void)
+{
   const char *ip = "127.0.0.1";
   const int port = 5050;
 
@@ -20,6 +21,8 @@ int main(void) {
     return 1;
   }
 
+  pthread_t recvThread;
+  pthread_create(&recvThread, NULL, clientIncomMsgs, &sockFD);
 
   char *line = NULL;
   size_t lineSize = 0;
@@ -37,6 +40,9 @@ int main(void) {
         send(sockFD, line, strlen(line), 0);
     }
   }
+
+  pthread_cancel(recvThread);
+  pthread_join(recvThread, NULL);
 
   free(address);
   close(sockFD);

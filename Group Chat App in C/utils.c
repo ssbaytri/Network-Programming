@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdio.h>
 
 int createTCPSocket()
 {
@@ -60,14 +59,11 @@ void *recvAndLog(void *arg)
 		if (bytesReceived > 0)
 		{
 			buffer[bytesReceived] = '\0';
-			printf("Response was: %s", buffer);
+			printf("%s", buffer);
 			broadcastMsg(buffer, sockFD);
 		}
 		else if (bytesReceived == 0)
-		{
-			printf("Client disconnected\n");
 			break;
-		}
 		else
 		{
 			perror("recv");
@@ -111,7 +107,7 @@ void *clientIncomMsgs(void *arg)
 		if (bytesReceived > 0)
 		{
 			buffer[bytesReceived] = 0;
-			printf("Response was: %s", buffer);
+			printf("%s", buffer);
 		}
 		else if (bytesReceived == 0)
 		{

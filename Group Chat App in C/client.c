@@ -1,9 +1,16 @@
 #include "main.h"
 
-int main(void)
+int main(int argc, char **argv)
 {
-  const char *ip = "127.0.0.1";
-  const int port = 5050;
+  const char *ip = argv[1];
+  const int port = atoi(argv[2]);
+
+  if (argc != 3)
+  {
+    fprintf(stderr, "Usage: %s <server_ip> <port>\n", argv[0]);
+    fprintf(stderr, "Example: %s 127.0.0.1 5050\n", argv[0]);
+    return 1;
+  }
 
   int sockFD = createTCPSocket();
   if (sockFD < 0) {

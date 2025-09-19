@@ -14,8 +14,17 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	// Option parsing and function calls will go here
-	// ...existing code...
+	if (!strcmp(argv[1], "-c"))
+	{
+		int cidr = mask_to_cidr(argv[2]);
+		if (cidr == -1)
+		{
+			printf("Invalid subnet mask: %s\n", argv[2]);
+        	return (1);
+		}
+		printf("CIDR notation: /%d\n", cidr);
+    	return (0);
+	}
 
 	return 0;
 }

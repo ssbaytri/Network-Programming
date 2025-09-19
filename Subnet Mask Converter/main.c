@@ -26,5 +26,17 @@ int main(int argc, char *argv[])
     	return (0);
 	}
 
+	if (!strcmp(argv[1], "-i"))
+	{
+		int octets[4];
+		if (cidr_to_mask(argv[2], octets) == -1)
+		{
+			printf("Invalid CIDR: %s\n", argv[2]);
+			return (1);
+		}
+		printf("Subnet mask: %d.%d.%d.%d\n", octets[0], octets[1], octets[2], octets[3]);
+    	return (0);
+	}
+
 	return 0;
 }
